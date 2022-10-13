@@ -64,10 +64,8 @@ void TSet::DelElem(const int Elem) // исключение элемента мн
 TSet& TSet::operator=(const TSet &s) // присваивание
 {
     MaxPower = s.GetMaxPower();
-    if (MaxPower != s.MaxPower) {
-        MaxPower = s.MaxPower;
-        BitField = s.BitField;
-    }
+    BitField = s.BitField;
+
     return *this;
 }
 
@@ -87,14 +85,15 @@ int TSet::operator!=(const TSet &s) const // сравнение
 
 TSet TSet::operator+(const TSet &s) // объединение
 {
-    if (MaxPower != s.MaxPower)
-        throw length_error("TSet objects have different size");
+
     TSet tmp(BitField | s.BitField);
     return tmp;
 }
 
 TSet TSet::operator+(const int Elem) // объединение с элементом
 {
+    if (Elem < 0 || Elem > MaxPower)
+        throw "error";
     TSet tmp(BitField);
     tmp.InsElem(Elem);
     return tmp;
@@ -109,8 +108,7 @@ TSet TSet::operator-(const int Elem) // разность с элементом
 
 TSet TSet::operator*(const TSet &s) // пересечение
 {
-    if (MaxPower != s.MaxPower)
-        throw length_error("TSet objects have different size");
+
     TSet tmp(BitField & s.BitField);
     return tmp;
 }
@@ -125,6 +123,17 @@ TSet TSet::operator~(void) // дополнение
 
 istream &operator>>(istream &istr, TSet &s) // ввод
 {
+    int len;
+    istr >> len;
+    TSet tmp(len);
+    char* buf = new char[len];
+    istr >> buf;
+    for (int i = 0; i < len; i++)
+        if (buf[i] == 0)
+            tmp.DelElem(i);
+        else
+            tmp.InsElem(i);
+
     return istr;
 }
 
