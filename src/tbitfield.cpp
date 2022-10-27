@@ -142,8 +142,8 @@ TBitField TBitField::operator~(void) // отрицание
         tmp.pMem[i] = ~pMem[i];
 
     int mask = BitLen & ((1 << 5) - 1);
-    
-    tmp.pMem[i - 1] = tmp.pMem[i - 1] & ((1 << mask) - 1);
+    int mask1 = ((1 << mask) - 1);
+    tmp.pMem[i - 1] = tmp.pMem[i - 1] & mask1;
     return tmp;
     
     
